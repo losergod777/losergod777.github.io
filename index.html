@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kurishi - TV, accessible for all</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>kurishi:</h1>
+    <p>Search TMDB for movies by title or paste a TMDB URL.</p>
+</header>
+    <main>
+        <section id="search">
+            <input type="text" id="search-input" placeholder="Enter movie title...">
+            <button id="search-btn">Search</button>
+        </section>
+        <section id="results">
+            <div id="movie-list"></div>
+        </section>
+        <section id="player">
+            <h3 id="player-title" style="display:none; margin-bottom: 10px; color: #9333ea; font-weight: bold;">Now Playing</h3>
+            <iframe id="vidking-player" src="" frameborder="0" allowfullscreen></iframe>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 <a href="https://www.github.com/losergod777/losergod777.github.io">losergod777</a></p>
+        <details>
+            <summary>Legal Disclaimer</summary>
+            <p>This site does not host any video content. All movies and shows are embedded from third-party streaming providers. We do not store, upload, or distribute any media files. Users are responsible for complying with local laws regarding streaming content. Use at your own discretion.</p>
+        </details>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
