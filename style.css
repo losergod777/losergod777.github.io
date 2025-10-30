@@ -122,7 +122,7 @@ main {
 
 #vidking-player {
     width: 100%;
-    max-width: 1080px;
+    max-width: 90vw; /* Changed from fixed pixels to viewport width */
     aspect-ratio: 16 / 9;
     display: none;
     margin: 0 auto;
@@ -199,7 +199,7 @@ footer details p {
     }
 
     #vidking-player {
-        max-width: 100%;
+        max-width: 95vw; /* Slightly smaller on mobile for better margins */
     }
 }
 
