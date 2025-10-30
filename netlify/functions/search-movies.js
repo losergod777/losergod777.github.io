@@ -1,5 +1,5 @@
 exports.handler = async (event, context) => {
-    const apiKey = process.env.TMDB_KEY; // Secure environment variable
+    const apiKey = process.env.TMDB_KEY;
     const { query } = event.queryStringParameters;
 
     try {
