@@ -122,8 +122,10 @@ main {
 
 #vidking-player {
     width: 100%;
-    max-width: 90vw; /* Changed from fixed pixels to viewport width */
+    max-width: 90vw; /* Responsive width relative to viewport */
     aspect-ratio: 16 / 9;
+    height: auto; /* allow aspect-ratio to calculate height */
+    min-height: 240px; /* ensure it's visible on very small viewports */
     display: none;
     margin: 0 auto;
     border: 4px solid #9333ea;
@@ -246,5 +248,17 @@ footer details p {
 
     footer details p {
         font-size: 0.8em;
+    }
+}
+
+/* Desktop sizing: make player noticeably larger on wide screens */
+@media (min-width: 1024px) {
+    #vidking-player {
+        max-width: 1200px; /* cap the player width on wide screens */
+        min-height: 675px; /* 16:9 height for 1200px width */
+    }
+
+    #player {
+        padding: 30px;
     }
 }

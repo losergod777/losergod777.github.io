@@ -86,6 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
         playerSection.style.display = 'block';
         document.getElementById('player-title').style.display = 'block';
         vidkingPlayer.style.display = 'block';
+        // Ensure a sensible size on desktop vs mobile in case CSS is overridden
+        if (window.innerWidth >= 1024) {
+            vidkingPlayer.style.maxWidth = '1200px';
+            vidkingPlayer.style.minHeight = '675px';
+            vidkingPlayer.style.width = '100%';
+        } else {
+            vidkingPlayer.style.maxWidth = '95vw';
+            vidkingPlayer.style.minHeight = '240px';
+            vidkingPlayer.style.width = '100%';
+        }
         // Update URL
         const newUrl = `${window.location.origin}${window.location.pathname}?movie=${movieId}`;
         window.history.pushState({movieId: movieId}, '', newUrl);
