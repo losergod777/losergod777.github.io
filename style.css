@@ -121,8 +121,9 @@ main {
 }
 
 #vidking-player {
-    width: 1080px;
-    height: 720px;
+    width: 100%;
+    max-width: 1080px;
+    aspect-ratio: 16 / 9;
     display: none;
     margin: 0 auto;
     border: 4px solid #9333ea;
@@ -156,30 +157,94 @@ footer details p {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    header {
+        padding: 0.5rem;
+    }
+
     header h1 {
-        font-size: 2em;
+        font-size: 1.8em;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    #search {
+        margin-bottom: 15px;
     }
 
     #search-input {
         width: 100%;
         max-width: 300px;
+        margin-bottom: 10px;
+    }
+
+    #search-btn {
+        padding: 12px 20px;
+        font-size: 18px;
     }
 
     #movie-list {
+        gap: 15px;
         justify-content: center;
     }
 
     .movie-item {
         flex: 1 1 150px;
+        padding: 10px;
+    }
+
+    #player {
+        padding: 10px;
+    }
+
+    #vidking-player {
+        max-width: 100%;
     }
 }
 
 @media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    #search {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #search-input {
+        width: 100%;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    #search-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 20px;
+    }
+
     #movie-list {
+        gap: 10px;
         justify-content: center;
     }
 
     .movie-item {
         flex: 0 0 120px;
+        padding: 8px;
+        min-height: 180px;
+    }
+
+    .movie-item img {
+        border-radius: 5px;
+    }
+
+    footer {
+        padding: 8px;
+    }
+
+    footer details p {
+        font-size: 0.8em;
     }
 }
