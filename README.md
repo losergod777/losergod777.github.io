@@ -4,7 +4,7 @@ TV, but accessible for everyone, anywhere.
 
 ## BASICS
 
-This is a HTML (obviously, github pages and possible netlify if needed) website that lets you look up movies on TMDB, then uses Vidking to embed them into the website, allowing for watching. It goes into the URL too, which makes it easy to share with a preset already, while staying secure.
+This is a website that lets you look up movies on TMDB, then uses Vidking to embed them into the website, allowing for watching. It goes into the URL too, which makes it easy to share with a preset already, while staying secure.
 
 The URL for embeding is `https://www.vidking.net/embed/movie/xxxxxx`, with the x's representing the TMDB title. For example, https://www.themoviedb.org/movie/629542-the-bad-guys, the x's would be 629542. Not only does it let you pick which one you want, but it also automatically strips that number for you for easy playing!
 
