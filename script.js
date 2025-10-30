@@ -1,5 +1,3 @@
-const API_KEY = '00c38392a0e39c39cefeffa58df68413';
-
 document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('search-btn');
     const searchInput = document.getElementById('search-input');
@@ -49,12 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function searchMovies(query) {
         try {
-            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
-            const data = await response.json();
-            displayMovies(data.results);
+            const response = await fetch(`/.netlify/functions/search-movies?query=${encodeURIComponent(query)}`);
+            const movies = await response.json();
+            displayMovies(movies);
         } catch (error) {
             console.error('Error searching movies:', error);
-            alert('Error searching movies. Please check your API key.');
+            alert('Error searching movies. Please try again later.');
         }
     }
 
