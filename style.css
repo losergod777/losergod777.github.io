@@ -38,10 +38,20 @@ header {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Deeper shadow */
     position: relative;
     z-index: 10;
+    display: flex; /* Use flexbox for header content and search */
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distribute items */
+    align-items: center;
+}
+
+.header-content {
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 20px; /* Space between content and search */
 }
 
 header h1 {
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Adjusted margin */
     background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -57,26 +67,18 @@ header p {
     color: rgba(255, 255, 255, 0.8);
 }
 
-main {
-    flex: 1;
-    padding: 30px 20px; /* Increased padding */
-    max-width: 1200px; /* Max width for content */
-    margin: 0 auto;
-    width: 100%;
-}
-
-#search {
-    text-align: center;
-    margin-bottom: 40px; /* More space */
+#search.header-search {
+    text-align: right; /* Align search to the right */
+    margin-bottom: 0; /* Remove bottom margin */
     display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between input and button */
-    flex-wrap: wrap;
+    gap: 10px; /* Space between input and button */
+    flex-wrap: nowrap; /* Prevent wrapping for search elements */
+    align-items: center;
 }
 
 #search-input {
     padding: 12px 15px; /* Increased padding */
-    width: 350px; /* Slightly wider */
+    width: 300px; /* Adjusted width for header */
     font-size: 17px; /* Slightly larger font */
     background: var(--background-dark);
     border: 2px solid var(--border-color);
@@ -110,15 +112,49 @@ main {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
 }
 
-#results {
+main {
+    flex: 1;
+    padding: 30px 20px; /* Increased padding */
+    max-width: 1200px; /* Max width for content */
+    margin: 0 auto;
+    width: 100%;
+}
+
+h2 {
+    font-size: 2em;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px var(--shadow-color);
+}
+
+#trending-movies, #search-results {
     margin-bottom: 40px; /* More space */
 }
 
-#movie-list {
-    display: grid; /* Using CSS Grid for better layout control */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid */
+.movie-horizontal-list {
+    display: flex; /* Use flexbox for horizontal scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
     gap: 25px; /* Increased gap */
-    justify-items: center; /* Center items in grid cells */
+    padding-bottom: 15px; /* Space for scrollbar */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* Firefox scrollbar */
+    scrollbar-color: var(--primary-color) var(--background-dark); /* Firefox scrollbar colors */
+}
+
+.movie-horizontal-list::-webkit-scrollbar {
+    height: 10px; /* Height of horizontal scrollbar */
+}
+
+.movie-horizontal-list::-webkit-scrollbar-track {
+    background: var(--background-dark); /* Track color */
+    border-radius: 10px;
+}
+
+.movie-horizontal-list::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color); /* Thumb color */
+    border-radius: 10px;
+    border: 2px solid var(--background-dark); /* Padding around thumb */
 }
 
 .movie-item {
@@ -133,7 +169,8 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; /* Ensure consistent height in grid */
+    flex-shrink: 0; /* Prevent items from shrinking */
+    width: 180px; /* Fixed width for horizontal list items */
 }
 
 .movie-item:hover {
@@ -186,7 +223,7 @@ main {
     aspect-ratio: 16 / 9;
     height: auto;
     min-height: 240px;
-    display: block; /* Changed from none to block for consistency with player-container */
+    display: block;
     margin: 0 auto;
     background: var(--background-dark);
 }
@@ -273,38 +310,45 @@ footer details p {
 /* Responsive design */
 @media (max-width: 768px) {
     header {
+        flex-direction: column; /* Stack header items vertically */
         padding: 1rem 0.5rem;
+    }
+
+    .header-content {
+        margin-right: 0;
+        margin-bottom: 15px; /* Space below header content */
+        text-align: center;
     }
 
     header h1 {
         font-size: 2.5em;
     }
 
+    #search.header-search {
+        width: 100%; /* Full width for search bar */
+        justify-content: center;
+    }
+
+    #search-input {
+        width: 70%; /* Adjust width for smaller screens */
+        max-width: 300px;
+    }
+
+    #search-btn {
+        width: 25%;
+        max-width: 100px;
+    }
+
     main {
         padding: 20px 10px;
     }
 
-    #search {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    #search-input {
-        width: 90%;
-        max-width: 350px;
-    }
-
-    #search-btn {
-        width: 90%;
-        max-width: 350px;
-    }
-
-    #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 20px;
+    h2 {
+        font-size: 1.8em;
     }
 
     .movie-item {
+        width: 150px; /* Adjusted width for smaller screens */
         padding: 12px;
     }
 
@@ -352,12 +396,8 @@ footer details p {
         max-width: 280px;
     }
 
-    #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 15px;
-    }
-
     .movie-item {
+        width: 120px; /* Adjusted width for very small screens */
         padding: 10px;
         border-radius: 10px;
     }
