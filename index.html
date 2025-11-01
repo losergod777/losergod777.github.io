@@ -21,7 +21,12 @@
         </section>
         <section id="player">
             <h3 id="player-title" style="display:none; margin-bottom: 10px; color: #9333ea; font-weight: bold;">Now Playing</h3>
-            <iframe id="vidking-player" src="" frameborder="0" allowfullscreen></iframe>
+            <div id="player-container" style="position: relative; width: 100%; max-width: 1200px; margin: 0 auto;">
+                <iframe id="vidking-player" src="" frameborder="0" allowfullscreen style="display: block; width: 100%; height: 100%;"></iframe>
+                <div id="player-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10;">
+                    <p style="color: white; font-size: 1.2em; text-align: center;">Tap to enable player interaction (may open ads)</p>
+                </div>
+            </div>
         </section>
     </main>
     <footer>

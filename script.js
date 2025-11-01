@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const movieList = document.getElementById('movie-list');
     const playerSection = document.getElementById('player');
+    const playerContainer = document.getElementById('player-container');
     const vidkingPlayer = document.getElementById('vidking-player');
+    const playerOverlay = document.getElementById('player-overlay');
 
     let currentMovieId = null;
 
@@ -82,17 +84,25 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('results').style.display = 'none';
         playerSection.style.display = 'block';
         document.getElementById('player-title').style.display = 'block';
-        vidkingPlayer.style.display = 'block';
+        playerContainer.style.display = 'block'; // Ensure the container is visible
+        playerOverlay.style.display = 'flex'; // Show overlay initially
+
+        // Adjust player dimensions based on screen size
         if (window.innerWidth >= 1024) {
-            vidkingPlayer.style.maxWidth = '1200px';
-            vidkingPlayer.style.minHeight = '675px';
-            vidkingPlayer.style.width = '100%';
+            playerContainer.style.maxWidth = '1200px';
+            playerContainer.style.height = '675px'; // Set a fixed height for desktop
         } else {
-            vidkingPlayer.style.maxWidth = '95vw';
-            vidkingPlayer.style.minHeight = '240px';
-            vidkingPlayer.style.width = '100%';
+            playerContainer.style.maxWidth = '95vw';
+            playerContainer.style.height = '240px'; // Set a fixed height for mobile
         }
+        vidkingPlayer.style.width = '100%';
+        vidkingPlayer.style.height = '100%'; // Make iframe fill its container
+
         const newUrl = `${window.location.origin}${window.location.pathname}?movie=${movieId}`;
         window.history.pushState({movieId: movieId}, '', newUrl);
     }
+
+    playerOverlay.addEventListener('click', function() {
+        playerOverlay.style.display = 'none'; // Hide overlay on click
+    });
 });
