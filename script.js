@@ -1,3 +1,5 @@
+const TMDB_API_KEY = "00c38392a0e39c39cefeffa58df68413";
+
 const DEFAULT_CONFIG = {
   position: 'bottom',
   strength: 2,
@@ -172,10 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentMovieId = null;
 
-    // Apply GradualBlur to trending and search results lists
-    applyGradualBlur(trendingList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1, target: 'parent' });
-    applyGradualBlur(movieList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1, target: 'parent' });
-
     fetchTrendingMovies();
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -218,9 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchTrendingMovies() {
         try {
-            const response = await fetch(`/.netlify/functions/search-movies?trending=true`);
-            const movies = await response.json();
-            displayMovies(movies, trendingList);
+            const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`);
+            const data = await response.json();
+            displayMovies(data.results, trendingList);
         } catch (error) {
             console.error('Error fetching trending movies:', error);
         }
@@ -228,9 +226,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function searchMovies(query) {
         try {
-            const response = await fetch(`/.netlify/functions/search-movies?query=${encodeURIComponent(query)}`);
-            const movies = await response.json();
-            displayMovies(movies, movieList);
+            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            displayMovies(data.results, movieList);
         } catch (error) {
             console.error('Error searching movies:', error);
             alert('Error searching movies. Please try again later.');
@@ -246,12 +244,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         movies.forEach(movie => {
             const movieDiv = document.createElement('div');
-            movieDiv.className = 'movie-item';
+            movieDiv.className = 'movie-item glass-surface glass-surface--fallback'; // Add glass-surface classes
+            
+            const glassFilterDiv = document.createElement('div');
+            glassFilterDiv.className = 'glass-surface__filter';
+            movieDiv.appendChild(glassFilterDiv);
+
+            const glassContentDiv = document.createElement('div');
+            glassContentDiv.className = 'glass-surface__content';
+            
             const releaseYear = movie.release_date ? movie.release_date.split('-')[0] : 'Unknown';
-            movieDiv.innerHTML = `
+            glassContentDiv.innerHTML = `
                 <img src="https://image.tmdb.org/t/p/w185${movie.poster_path || ''}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/185x278?text=No+Image'">
                 <p>${movie.title} (${releaseYear})</p>
             `;
+            movieDiv.appendChild(glassContentDiv);
+
             movieDiv.addEventListener('click', function() {
                 playMovie(movie.id);
             });
