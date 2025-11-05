@@ -1118,14 +1118,21 @@ footer details p {
 
 .inner-content {
   position: relative;
-  border: 1px solid #222;
-  background: #000;
-  color: white;
+  /* The movie-item already has border and background */
+  /* border: 1px solid #222; */
+  /* background: #000; */
+  color: white; /* Use existing text-color variable if possible */
   font-size: 16px;
   text-align: center;
-  padding: 16px 26px;
-  border-radius: 20px;
+  padding: 0; /* Remove padding here, let movie-item handle it */
+  border-radius: 20px; /* Inherit from parent or adjust as needed */
   z-index: 1;
+  width: 100%; /* Ensure it stretches */
+  height: 100%; /* Ensure it stretches */
+  display: flex; /* Use flexbox to center content */
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @keyframes star-movement-bottom {

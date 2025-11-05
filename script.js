@@ -173,8 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentMovieId = null;
 
     // Apply GradualBlur to trending and search results lists
-    applyGradualBlur(trendingList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1 });
-    applyGradualBlur(movieList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1 });
+    applyGradualBlur(trendingList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1, target: 'parent' });
+    applyGradualBlur(movieList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1, target: 'parent' });
 
     fetchTrendingMovies();
 
