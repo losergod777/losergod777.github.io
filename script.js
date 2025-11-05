@@ -1,3 +1,159 @@
+const DEFAULT_CONFIG = {
+  position: 'bottom',
+  strength: 2,
+  height: '6rem',
+  divCount: 5,
+  exponential: false,
+  zIndex: 1000,
+  animated: false,
+  duration: '0.3s',
+  easing: 'ease-out',
+  opacity: 1,
+  curve: 'linear',
+  responsive: false,
+  target: 'parent',
+  className: '',
+  style: {}
+};
+
+const PRESETS = {
+  top: { position: 'top', height: '6rem' },
+  bottom: { position: 'bottom', height: '6rem' },
+  left: { position: 'left', height: '6rem' },
+  right: { position: 'right', height: '6rem' },
+  subtle: { height: '4rem', strength: 1, opacity: 0.8, divCount: 3 },
+  intense: { height: '10rem', strength: 4, divCount: 8, exponential: true },
+  smooth: { height: '8rem', curve: 'bezier', divCount: 10 },
+  sharp: { height: '5rem', curve: 'linear', divCount: 4 },
+  header: { position: 'top', height: '8rem', curve: 'ease-out' },
+  footer: { position: 'bottom', height: '8rem', curve: 'ease-out' },
+  sidebar: { position: 'left', height: '6rem', strength: 2.5 },
+  'page-header': { position: 'top', height: '10rem', target: 'page', strength: 3 },
+  'page-footer': { position: 'bottom', height: '10rem', target: 'page', strength: 3 }
+};
+
+const CURVE_FUNCTIONS = {
+  linear: p => p,
+  bezier: p => p * p * (3 - 2 * p),
+  'ease-in': p => p * p,
+  'ease-out': p => 1 - Math.pow(1 - p, 2),
+  'ease-in-out': p => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+};
+
+const mergeConfigs = (...configs) => configs.reduce((acc, c) => ({ ...acc, ...c }), {});
+const getGradientDirection = position =>
+  ({
+    top: 'to top',
+    bottom: 'to bottom',
+    left: 'to left',
+    right: 'to right'
+  })[position] || 'to bottom';
+
+function applyGradualBlur(targetElement, options = {}) {
+  const config = mergeConfigs(DEFAULT_CONFIG, options.preset && PRESETS[options.preset] ? PRESETS[options.preset] : {}, options);
+
+  const blurContainer = document.createElement('div');
+  blurContainer.className = `gradual-blur ${config.target === 'page' ? 'gradual-blur-page' : 'gradual-blur-parent'} ${config.className}`;
+  
+  const isVertical = ['top', 'bottom'].includes(config.position);
+  const isHorizontal = ['left', 'right'].includes(config.position);
+  const isPageTarget = config.target === 'page';
+
+  blurContainer.style.position = isPageTarget ? 'fixed' : 'absolute';
+  blurContainer.style.pointerEvents = 'none';
+  blurContainer.style.opacity = 1; // Simplified: always visible
+  blurContainer.style.zIndex = isPageTarget ? config.zIndex + 100 : config.zIndex;
+  Object.assign(blurContainer.style, config.style);
+
+  if (isVertical) {
+    blurContainer.style.height = config.height;
+    blurContainer.style.width = config.width || '100%';
+    blurContainer.style[config.position] = 0;
+    blurContainer.style.left = 0;
+    blurContainer.style.right = 0;
+  } else if (isHorizontal) {
+    blurContainer.style.width = config.width || config.height;
+    blurContainer.style.height = '100%';
+    blurContainer.style[config.position] = 0;
+    blurContainer.style.top = 0;
+    blurContainer.style.bottom = 0;
+  }
+
+  const innerDiv = document.createElement('div');
+  innerDiv.className = 'gradual-blur-inner';
+  innerDiv.style.position = 'relative';
+  innerDiv.style.width = '100%';
+  innerDiv.style.height = '100%';
+  blurContainer.appendChild(innerDiv);
+
+  const increment = 100 / config.divCount;
+  const currentStrength = config.strength;
+  const curveFunc = CURVE_FUNCTIONS[config.curve] || CURVE_FUNCTIONS.linear;
+
+  for (let i = 1; i <= config.divCount; i++) {
+    let progress = i / config.divCount;
+    progress = curveFunc(progress);
+
+    let blurValue;
+    if (config.exponential) {
+      blurValue = Math.pow(2, progress * 4) * 0.0625 * currentStrength;
+    } else {
+      blurValue = 0.0625 * (progress * config.divCount + 1) * currentStrength;
+    }
+
+    const p1 = Math.round((increment * i - increment) * 10) / 10;
+    const p2 = Math.round(increment * i * 10) / 10;
+    const p3 = Math.round((increment * i + increment) * 10) / 10;
+    const p4 = Math.round((increment * i + increment * 2) * 10) / 10;
+
+    let gradient = `transparent ${p1}%, black ${p2}%`;
+    if (p3 <= 100) gradient += `, black ${p3}%`;
+    if (p4 <= 100) gradient += `, transparent ${p4}%`;
+
+    const direction = getGradientDirection(config.position);
+
+    const div = document.createElement('div');
+    div.style.position = 'absolute';
+    div.style.inset = '0';
+    div.style.maskImage = `linear-gradient(${direction}, ${gradient})`;
+    div.style.WebkitMaskImage = `linear-gradient(${direction}, ${gradient})`;
+    div.style.backdropFilter = `blur(${blurValue.toFixed(3)}rem)`;
+    div.style.WebkitBackdropFilter = `blur(${blurValue.toFixed(3)}rem)`;
+    div.style.opacity = config.opacity;
+    innerDiv.appendChild(div);
+  }
+
+  targetElement.appendChild(blurContainer);
+}
+
+function applyStarBorder(targetElement, options = {}) {
+  const { color = 'white', speed = '3s', thickness = 3 } = options;
+
+  targetElement.style.padding = `${thickness}px 0`;
+  targetElement.classList.add('star-border-container');
+
+  const bottomBorder = document.createElement('div');
+  bottomBorder.className = 'border-gradient-bottom';
+  bottomBorder.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
+  bottomBorder.style.animationDuration = speed;
+  targetElement.appendChild(bottomBorder);
+
+  const topBorder = document.createElement('div');
+  topBorder.className = 'border-gradient-top';
+  topBorder.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
+  topBorder.style.animationDuration = speed;
+  targetElement.appendChild(topBorder);
+
+  const innerContent = document.createElement('div');
+  innerContent.className = 'inner-content';
+  // Move existing content into innerContent
+  while (targetElement.firstChild && targetElement.firstChild !== bottomBorder) {
+    innerContent.appendChild(targetElement.firstChild);
+  }
+  targetElement.insertBefore(innerContent, bottomBorder);
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('search-btn');
     const searchInput = document.getElementById('search-input');
@@ -11,6 +167,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const playerOverlay = document.getElementById('player-overlay');
 
     let currentMovieId = null;
+
+    // Apply GradualBlur to trending and search results sections
+    applyGradualBlur(trendingList.parentElement, { preset: 'footer', height: '4rem', opacity: 0.7 });
+    applyGradualBlur(searchResultsSection, { preset: 'footer', height: '4rem', opacity: 0.7 });
 
     fetchTrendingMovies();
 
@@ -92,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 playMovie(movie.id);
             });
             containerElement.appendChild(movieDiv);
+            applyStarBorder(movieDiv, { color: `rgba(${DEFAULT_GLOW_COLOR_RGB}, 1)`, speed: '5s', thickness: 3 });
         });
     };
 
@@ -99,7 +260,14 @@ document.addEventListener('DOMContentLoaded', function() {
         originalDisplayMovies(movies, containerElement);
 
         containerElement.querySelectorAll('.movie-item').forEach(movieDiv => {
+            // The StarBorder function already adds .star-border-container and wraps content in .inner-content
+            // We need to ensure the existing particle/glow effects target the correct elements.
+            // The .movie-item--border-glow class is still useful for the radial gradient border.
             movieDiv.classList.add('movie-item--border-glow');
+
+            // All existing event listeners and particle/glow logic should now target the movieDiv itself,
+            // as the StarBorder wraps the original content.
+            // The particle creation should append to the movieDiv, not its inner content.
 
             let isHovered = false;
             let particles = [];
@@ -137,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!isHovered || !movieDiv) return;
 
                         const clone = particle.cloneNode(true);
-                        movieDiv.appendChild(clone);
+                        movieDiv.appendChild(clone); // Append to movieDiv, not inner-content
                         particles.push(clone);
 
                         gsap.fromTo(clone, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' });
@@ -246,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     z-index: 1000;
                 `;
 
-                movieDiv.appendChild(ripple);
+                movieDiv.appendChild(ripple); // Append to movieDiv, not inner-content
 
                 gsap.fromTo(
                     ripple,
