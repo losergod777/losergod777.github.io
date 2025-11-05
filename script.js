@@ -129,8 +129,20 @@ function applyGradualBlur(targetElement, options = {}) {
 function applyStarBorder(targetElement, options = {}) {
   const { color = 'white', speed = '3s', thickness = 3 } = options;
 
-  targetElement.style.padding = `${thickness}px 0`;
+  // Create the inner content wrapper first
+  const innerContent = document.createElement('div');
+  innerContent.className = 'inner-content';
+  // Move existing content into innerContent
+  while (targetElement.firstChild) {
+    innerContent.appendChild(targetElement.firstChild);
+  }
+  targetElement.appendChild(innerContent);
+
+  // Now add the star border elements
   targetElement.classList.add('star-border-container');
+  // The padding should be on the inner-content, not the container itself,
+  // or handled by the CSS for .inner-content.
+  // Removing direct padding application here.
 
   const bottomBorder = document.createElement('div');
   bottomBorder.className = 'border-gradient-bottom';
@@ -143,14 +155,6 @@ function applyStarBorder(targetElement, options = {}) {
   topBorder.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
   topBorder.style.animationDuration = speed;
   targetElement.appendChild(topBorder);
-
-  const innerContent = document.createElement('div');
-  innerContent.className = 'inner-content';
-  // Move existing content into innerContent
-  while (targetElement.firstChild && targetElement.firstChild !== bottomBorder) {
-    innerContent.appendChild(targetElement.firstChild);
-  }
-  targetElement.insertBefore(innerContent, bottomBorder);
 }
 
 
@@ -168,9 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentMovieId = null;
 
-    // Apply GradualBlur to trending and search results sections
-    applyGradualBlur(trendingList.parentElement, { preset: 'footer', height: '4rem', opacity: 0.7 });
-    applyGradualBlur(searchResultsSection, { preset: 'footer', height: '4rem', opacity: 0.7 });
+    // Apply GradualBlur to trending and search results lists
+    applyGradualBlur(trendingList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1 });
+    applyGradualBlur(movieList, { preset: 'footer', height: '3rem', opacity: 0.6, zIndex: 1 });
 
     fetchTrendingMovies();
 
