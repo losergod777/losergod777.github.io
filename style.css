@@ -133,7 +133,9 @@ h2 {
 }
 
 .movie-horizontal-list {
+    position: relative; /* Added to contain absolutely positioned children */
     display: flex; /* Use flexbox for horizontal scrolling */
+    overflow: hidden; /* Ensure blur is clipped within the container */
     overflow-x: auto; /* Enable horizontal scrolling */
     gap: 25px; /* Increased gap */
     padding-bottom: 15px; /* Space for scrollbar */
@@ -1074,15 +1076,6 @@ footer details p {
   }
 }
 
-.gradual-blur-fixed {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1000;
-}
 
 /* StarBorder CSS */
 .star-border-container {
